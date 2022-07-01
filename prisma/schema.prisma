@@ -32,5 +32,43 @@ model User {
   id    String  @id @default(auto()) @map("_id") @db.ObjectId
   email String  @unique
   name  String?
+  role Int?
+  tel  String?
+  enable Boolean?
   posts Post[]
+  org   Org?      @relation(fields: [orgId], references: [id])
+  orgId String?    @db.ObjectId
+  personalDocument PersonalDocument[]
+}
+
+
+model Org{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  description String
+  type String
+  level String
+  parentId String? @db.ObjectId
+  parent Org? @relation("parent",fields: [parentId], references: [id],onDelete:NoAction,onUpdate:NoAction)
+  children Org[] @relation("parent")
+  users User[]
+  orgDocument OrgDocument[]
+}
+
+model PersonalDocument{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  description String
+  url String
+  author   User      @relation(fields: [authorId], references: [id])
+  authorId String    @db.ObjectId
+}
+
+model OrgDocument{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  description String
+  url String
+  org   Org      @relation(fields: [orgId], references: [id])
+  orgId String    @db.ObjectId
 }

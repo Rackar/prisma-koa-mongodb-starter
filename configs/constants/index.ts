@@ -1,10 +1,10 @@
-// import { bootstrapBefore } from '../bootstrap'
+import { bootstrapBefore } from '../bootstrap'
 import development, { EevRecord } from './development'
 import staging from './staging'
 import production from './production'
 import { ENVS } from './envs'
 
-// const parsedEnvs = bootstrapBefore()
+const parsedEnvs = bootstrapBefore()
 
 const getCurrentEnv = (): ENVS => {
   const env = process.env?.ENV
@@ -28,7 +28,7 @@ const getCurrentConstants = (ident: ENVS): EevRecord => {
   Object.keys(development).forEach(key => {
     const sourceValue = source[key]
     const processValue = process.env[key]
-    // const parsedValue = parsedEnvs[key]
+    const parsedValue = parsedEnvs[key]
 
     if (typeof sourceValue !== 'undefined') {
       constants[key] = sourceValue
@@ -36,9 +36,9 @@ const getCurrentConstants = (ident: ENVS): EevRecord => {
     if (typeof processValue !== 'undefined') {
       constants[key] = processValue
     }
-    // if (typeof parsedValue !== 'undefined') {
-    //   constants[key] = parsedValue
-    // }
+    if (typeof parsedValue !== 'undefined') {
+      constants[key] = parsedValue
+    }
   })
 
   constants.ENV_LABEL = source.ENV_LABEL

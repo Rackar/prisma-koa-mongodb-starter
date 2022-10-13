@@ -6,6 +6,7 @@ import {
   Get,
   QueryParam,
   Put,
+  Param,
 } from 'routing-controllers'
 import { UsersService } from '../services'
 import { Prisma } from '@prisma/client'
@@ -65,5 +66,15 @@ export class UsersController {
         orgId: orgId || undefined,
       },
     })
+  }
+  @Get("/users/:id/upload")
+  async queryUploads(@Param("id") id: string) {
+    let files = await prisma.user.findUnique({
+      where: {
+        id: id
+      }
+    }).files({})
+
+    return { data: files }
   }
 }

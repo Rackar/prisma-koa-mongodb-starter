@@ -15,6 +15,7 @@ specifiers:
   koa-bodyparser: ^4.3.0
   koa-json: ^2.0.2
   koa-logger: ^3.2.1
+  koa-mount: ^4.0.0
   koa-multer: ^1.0.2
   koa-router: ^10.1.1
   koa-static: ^5.0.0
@@ -35,6 +36,7 @@ dependencies:
   koa-bodyparser: 4.3.0
   koa-json: 2.0.2
   koa-logger: 3.2.1
+  koa-mount: 4.0.0
   koa-multer: 1.0.2
   koa-router: 10.1.1
   koa-static: 5.0.0
@@ -858,6 +860,16 @@ packages:
       chalk: 2.4.2
       humanize-number: 0.0.2
       passthrough-counter: 1.0.0
+    dev: false
+
+  /koa-mount/4.0.0:
+    resolution: {integrity: sha512-rm71jaA/P+6HeCpoRhmCv8KVBIi0tfGuO/dMKicbQnQW/YJntJ6MnnspkodoA4QstMVEZArsCphmd0bJEtoMjQ==}
+    engines: {node: '>= 7.6.0'}
+    dependencies:
+      debug: 4.3.4
+      koa-compose: 4.1.0
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /koa-multer/1.0.2:

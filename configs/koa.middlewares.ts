@@ -3,6 +3,8 @@ import logger from 'koa-logger'
 import bodyParser from 'koa-bodyparser'
 import { isProd } from './constants'
 const json = require("koa-json");
+const mount = require('koa-mount');
+import path from "path";
 
 export const useMiddlewares = <T extends Koa>(app: T): T => {
   if (isProd()) {
@@ -13,7 +15,8 @@ export const useMiddlewares = <T extends Koa>(app: T): T => {
     enableTypes: ["json", "form", "text"],
   }))
   app.use(json());
-  // app.use(require("koa-static")(__dirname + "/uploads"));
+
+  app.use(mount('/uploads', require("koa-static")(path.resolve(__dirname, "../uploads"))));
 
   return app
 }

@@ -11,7 +11,7 @@ generator client {
 }
 model Post {
   id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  slug     String    @unique
+  // slug     String    @unique
   title    String
   body     String
   comments Comment[]
@@ -31,14 +31,16 @@ model Comment {
 model User {
   id    String  @id @default(auto()) @map("_id") @db.ObjectId
   email String  @unique
+  password String
   name  String?
   role Int?
+  level Int?
   tel  String?
   enable Boolean?
   posts Post[]
   org   Org?      @relation(fields: [orgId], references: [id])
   orgId String?    @db.ObjectId
-  personalDocument PersonalDocument[]
+  personalDocument TheDocument[]
 }
 
 
@@ -52,23 +54,18 @@ model Org{
   parent Org? @relation("parent",fields: [parentId], references: [id],onDelete:NoAction,onUpdate:NoAction)
   children Org[] @relation("parent")
   users User[]
-  orgDocument OrgDocument[]
+  orgDocument TheDocument[]
 }
 
-model PersonalDocument{
+model TheDocument{
   id String @id @default(auto()) @map("_id") @db.ObjectId
   name String
   description String
   url String
-  author   User      @relation(fields: [authorId], references: [id])
-  authorId String    @db.ObjectId
+
+  author User? @relation(fields: [authorId], references: [id])
+  authorId String? @db.ObjectId
+  org   Org?      @relation(fields: [orgId], references: [id])
+  orgId String?    @db.ObjectId
 }
 
-model OrgDocument{
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  description String
-  url String
-  org   Org      @relation(fields: [orgId], references: [id])
-  orgId String    @db.ObjectId
-}

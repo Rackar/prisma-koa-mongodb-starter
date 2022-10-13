@@ -21,7 +21,7 @@ export class UsersService {
 
   async query(user: Prisma.UserCreateInput) {
     return prisma.user.findMany({where:{
-      email: user.email,
+      email: user.email || undefined,
     }})
   }
 }

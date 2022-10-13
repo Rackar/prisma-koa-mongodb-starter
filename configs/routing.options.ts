@@ -7,7 +7,7 @@ import { dictToArray } from './utils'
 export const routingConfigs: RoutingControllersOptions = {
   controllers: dictToArray(controllers),
 
-  middlewares: dictToArray(middlewares),
+  middlewares: dictToArray(middlewares), //路由中间件
 
   interceptors: dictToArray(interceptors),
 

@@ -8,7 +8,7 @@ import { useKoaServer, useContainer } from 'routing-controllers'
 const createServer = async (): Promise<Koa> => {
   const koa: Koa = new Koa()
 
-  useMiddlewares(koa)
+  useMiddlewares(koa) //全局中间件
 
   useContainer(Container)
 

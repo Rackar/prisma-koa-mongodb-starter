@@ -5,6 +5,7 @@ import {
   BodyParam,
   Get,
   QueryParam,
+  Body,
 } from 'routing-controllers'
 // import { UsersService } from '../services'
 import prisma from '../helpers/client'
@@ -13,35 +14,35 @@ import * as utils from '../../configs/utils'
 
 @JsonController()
 @Service()
-export class OrgsController {
+export class DocsController {
   constructor() { }
 
-  @Get('/orgs')
+  @Get('/docs')
   async query(
     @QueryParam('id') id: string,
     @QueryParam('name') name: string,
     @QueryParam('description') description: string,
-    @QueryParam('parentId') parentId: string,
-    @QueryParam('type') type: string,
-    @QueryParam('level') level: string) {
-    let params = utils.removeParamsObjectNullValue({ id, name, description, parentId, type, level })
-    let data = await prisma.org.findMany({ where: params })
+    @QueryParam('url') url: string,
+    @QueryParam('authorId') authorId: string,
+    @QueryParam('orgId') orgId: string) {
+    let params = utils.removeParamsObjectNullValue({ id, name, description, url, authorId, orgId })
+    let data = await prisma.theDocument.findMany({ where: params })
     return { data }
   }
 
-  @Post('/orgs')
+  @Post('/docs')
   async create(
     @BodyParam('name') name: string,
     @BodyParam('description') description: string,
-    @BodyParam('parentId') parentId: string,
-    @BodyParam('type') type: string,
-    @BodyParam('level') level: string,
+    @BodyParam('url') url: string,
+    @BodyParam('authorId') authorId: string,
+    @BodyParam('orgId') orgId: string,
   ) {
     if (!name) {
       throw new BadRequestError('name is required')
     }
-    return await prisma.org.create({
-      data:{ name, description, parentId, type, level} ,
+    return await prisma.theDocument.create({
+      data:{  name, description, url, authorId, orgId } ,
     })
   }
 }

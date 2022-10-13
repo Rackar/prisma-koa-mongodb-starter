@@ -33,7 +33,7 @@ model User {
   email String  @unique
   password String
   name  String?
-  role Int?
+  role String?
   level Int?
   tel  String?
   enable Boolean?

@@ -5,6 +5,7 @@ import { isProd } from './constants'
 const json = require("koa-json");
 const mount = require('koa-mount');
 import path from "path";
+// const jwt = require("koa-jwt");
 
 export const useMiddlewares = <T extends Koa>(app: T): T => {
   if (isProd()) {
@@ -17,6 +18,11 @@ export const useMiddlewares = <T extends Koa>(app: T): T => {
   app.use(json());
 
   app.use(mount('/uploads', require("koa-static")(path.resolve(__dirname, "../uploads"))));
+  // app.use(
+  //   jwt({ secret: 'aa' }).unless({
+  //     path: [/^\/noauth/, /^\/api/]
+  //   })
+  // );
 
   return app
 }

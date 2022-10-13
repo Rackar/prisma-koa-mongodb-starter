@@ -42,8 +42,12 @@ export class UploadsController {
 
   // 进行配置
   @Post("/upload")
-  saveFile(@UploadedFiles("file", { options: option }) file: any[]) {
-    console.log(file)
+  saveFile(
+    @UploadedFile("file", { options: option }) file: any,
+    @BodyParam('info') info?: string,
+  ) {
+    console.log(file, info)
+    return { data: { file, info } }
   }
 
 }

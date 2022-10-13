@@ -41,6 +41,7 @@ model User {
   org   Org?      @relation(fields: [orgId], references: [id])
   orgId String?    @db.ObjectId
   personalDocument TheDocument[]
+  files FileBeenUploaded[]
 }
 
 
@@ -67,5 +68,19 @@ model TheDocument{
   authorId String? @db.ObjectId
   org   Org?      @relation(fields: [orgId], references: [id])
   orgId String?    @db.ObjectId
+}
+
+model FileBeenUploaded{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String?
+  description String?
+  fieldname String //"file",
+  originalname String // "f1.png",
+  mimetype String //"image/png",
+  filename String //"file-1665656561188f1.png",
+  path String //"uploads\\file-1665656561188f1.png",
+  author User? @relation(fields: [authorId], references: [id])
+  authorId String? @db.ObjectId
+  uploadTime DateTime @default(now())
 }
 

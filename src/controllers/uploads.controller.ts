@@ -16,8 +16,18 @@ import { Service } from 'typedi'
 // const multer = require('@koa/multer');
 import multer from 'multer';
 
+interface IFileResult {
+  "fieldname": string
+  "originalname": string
+  "encoding": string
+  "mimetype": string
+  "destination": string
+  "filename": string
+  "path": string
+  "size": number
+}
 
-let option = {
+const options = {
   storage: multer.diskStorage({
     destination: (req: any, file: any, cb: any) => {
       cb(null, "uploads/");
@@ -42,12 +52,28 @@ export class UploadsController {
 
   // 进行配置
   @Post("/upload")
-  saveFile(
-    @UploadedFile("file", { options: option }) file: any,
-    @BodyParam('info') info?: string,
+  async saveFile(
+    @UploadedFile("file", { options }) file: IFileResult,
+    @BodyParam('name') name?: string,
+    @BodyParam('description') description?: string,
+    @BodyParam('authorId') authorId?: string,
   ) {
-    console.log(file, info)
-    return { data: { file, info } }
+    console.log(file)
+    const { fieldname,
+      originalname,
+      mimetype,
+      filename,
+      path } = file
+    await prisma.fileBeenUploaded.create({
+      data: {
+        fieldname,
+        originalname,
+        mimetype,
+        filename,
+        path, name, description, authorId
+      }
+    })
+    return { data: { file } }
   }
 
 }

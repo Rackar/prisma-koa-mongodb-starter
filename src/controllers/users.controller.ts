@@ -24,7 +24,7 @@ export class UsersController {
         email: email || undefined,
       },
       select: {
-        email: true, name: true, tel: true, role: true, orgId: true
+        email: true, name: true, tel: true, role: true, orgId: true, id: true
       }
     })
 

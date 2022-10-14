@@ -17,7 +17,7 @@ model Post {
   comments Comment[]
   author   User      @relation(fields: [authorId], references: [id])
   authorId String    @db.ObjectId
-  publish Boolean @default(false)
+  publish Boolean @default(true)
   active Boolean @default(true)
   sortIndex Int  //排序序号
   ding Boolean @default(false) //是否置顶
@@ -33,7 +33,7 @@ model Comment {
   comment String
   author   User      @relation(fields: [authorId], references: [id])
   authorId String    @db.ObjectId
-  publish Boolean @default(false)
+  publish Boolean @default(true)
   active Boolean @default(true)
 }
 

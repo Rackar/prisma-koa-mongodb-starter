@@ -25,6 +25,9 @@ export class PostController {
       orderBy: {
         sortIndex: 'desc',
       },
+      include: {
+        comments: true
+      }
     })
     return { data }
   }
@@ -145,6 +148,9 @@ export class PostController {
       orderBy: {
         sortIndex: 'desc',
       },
+      include: {
+        comments: true
+      }
     })
     return { data }
   }

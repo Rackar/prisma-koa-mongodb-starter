@@ -1,9 +1,10 @@
 const jwt = require("jsonwebtoken");
 import prisma from '../helpers/client'
-const config = {
-  jwtsecret: 'ttt',
-  expiresIn: 24 * 60 * 60 * 1000
-}
+import config from "./secret";
+// const config = {
+//   jwtsecret: 'test', //needChangeToNewSecretString
+//   expiresIn: '2d'
+// }
 // 指定JWT中携带的信息类型
 interface CurrentUser {
   id: string;
@@ -25,7 +26,7 @@ export function createToken(user: CurrentUser): string {
     },
     config.jwtsecret,
     {
-      expiresIn: config.expiresIn // 授权时效1天
+      expiresIn: config.expiresIn // 授权时效2天 2d 2h。数字默认为毫秒,ms库
     }
   );
   return token

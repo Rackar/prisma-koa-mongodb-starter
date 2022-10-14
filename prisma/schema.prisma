@@ -17,6 +17,11 @@ model Post {
   comments Comment[]
   author   User      @relation(fields: [authorId], references: [id])
   authorId String    @db.ObjectId
+  publish Boolean @default(false)
+  active Boolean @default(true)
+  sortIndex Int  //排序序号
+  ding Boolean @default(false) //是否置顶
+  viewCount Int @default(0)
 }
 
 // Comments contain a comment string and connect back to the post.
@@ -26,6 +31,10 @@ model Comment {
   post    Post   @relation(fields: [postId], references: [id])
   postId  String @db.ObjectId
   comment String
+  author   User      @relation(fields: [authorId], references: [id])
+  authorId String    @db.ObjectId
+  publish Boolean @default(false)
+  active Boolean @default(true)
 }
 
 model User {
@@ -38,6 +47,7 @@ model User {
   tel  String?
   enable Boolean?
   posts Post[]
+  comment Comment[]
   org   Org?      @relation(fields: [orgId], references: [id])
   orgId String?    @db.ObjectId
   personalDocument TheDocument[]

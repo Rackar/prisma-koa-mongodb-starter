@@ -26,8 +26,28 @@ export class PostController {
         sortIndex: 'desc',
       },
       include: {
-        comments: true
-      }
+        comments: true,
+        author: {
+          select: {
+            name: true,
+            id: true,
+            role: true,
+            level: true
+          }
+        }
+      },
+      // 返回关联查询的部分字段。下面那种不返回本表数据，需要手动填入select
+      // select: {
+      //   author: {
+      //     select: {
+      //       name: true,
+      //       id: true,
+      //       role: true,
+      //       level: true
+      //     }
+      //   },
+      //   comments: true
+      // }
     })
     return { data }
   }
@@ -35,8 +55,8 @@ export class PostController {
   @Post('/post')
   async create(
     @BodyParam('title') title: string,
-    @BodyParam('content') body: string,
-    @BodyParam('authorEmail') email: string,
+    @BodyParam('body') body: string,
+    @BodyParam('email') email: string,
     // @CurrentUser() user?: User,
   ) {
     if (!title) {

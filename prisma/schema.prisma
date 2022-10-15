@@ -13,7 +13,8 @@ model Post {
   id       String    @id @default(auto()) @map("_id") @db.ObjectId
   // slug     String    @unique
   title    String
-  body     String
+  body     String //全文
+  abstract    String //摘要
   comments Comment[]
   author   User      @relation(fields: [authorId], references: [id])
   authorId String    @db.ObjectId

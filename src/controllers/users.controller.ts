@@ -39,7 +39,7 @@ export class UsersController {
     return { token }
   }
 
-  @Authorized()
+  // @Authorized()
   @Get('/users')
   async query(@QueryParam('email') email: string,) {
     let data = await prisma.user.findMany({

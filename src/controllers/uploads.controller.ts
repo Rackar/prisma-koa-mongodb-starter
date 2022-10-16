@@ -50,7 +50,7 @@ const options = {
 export class UploadsController {
   constructor() { }
 
-  // 进行配置
+  // 进行配置 //form提交也可以接受
   @Post("/upload")
   async saveFile(
     @UploadedFile("file", { options }) file: IFileResult,
@@ -58,7 +58,6 @@ export class UploadsController {
     @BodyParam('description') description?: string,
     @BodyParam('authorId') authorId?: string,
   ) {
-    console.log(file)
     const { fieldname,
       originalname,
       mimetype,

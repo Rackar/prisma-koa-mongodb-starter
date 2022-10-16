@@ -10,6 +10,7 @@ import {
   Body,
   CurrentUser,
   Delete,
+  Param,
 } from 'routing-controllers'
 import { Post as IPost, Prisma, User } from '@prisma/client'
 import { Service } from 'typedi'
@@ -52,10 +53,37 @@ export class PostController {
     return { data }
   }
 
+  @Get('/post/:id')
+  async queryByid(
+    @Param('id') id: string
+  ) {
+    let data = await prisma.post.findFirstOrThrow({
+      where: {
+        id
+      },
+      orderBy: {
+        sortIndex: 'desc',
+      },
+      include: {
+        comments: true,
+        author: {
+          select: {
+            name: true,
+            id: true,
+            role: true,
+            level: true
+          }
+        }
+      },
+    })
+    return { data }
+  }
+
   @Post('/post')
   async create(
     @BodyParam('title') title: string,
     @BodyParam('body') body: string,
+    @BodyParam('abstract') abstract: string,
     @BodyParam('email') email: string,
     // @CurrentUser() user?: User,
   ) {
@@ -65,7 +93,7 @@ export class PostController {
     const count = await prisma.post.count()
     return {
       data: await prisma.post.create({
-        data: { title, body, sortIndex: count * 10, author: { connect: { email } } }
+        data: { title, body, abstract, sortIndex: count * 10, author: { connect: { email } } }
       })
     }
   }

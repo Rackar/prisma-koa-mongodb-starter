@@ -42,7 +42,7 @@ export class DocsController {
       throw new BadRequestError('name is required')
     }
     return await prisma.theDocument.create({
-      data:{  name, description, url, authorId, orgId } ,
+      data: { name, description, url, authorId, orgId },
     })
   }
 }

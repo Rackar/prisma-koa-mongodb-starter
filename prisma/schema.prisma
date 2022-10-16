@@ -23,6 +23,9 @@ model Post {
   sortIndex Int  //排序序号
   ding Boolean @default(false) //是否置顶
   viewCount Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Comments contain a comment string and connect back to the post.
@@ -36,14 +39,26 @@ model Comment {
   authorId String    @db.ObjectId
   publish Boolean @default(true)
   active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  BANED
+  USER
+  PUBLISHER
+  EDITOR
+  SUB_ADMIN
+  ADMIN
 }
 
 model User {
   id    String  @id @default(auto()) @map("_id") @db.ObjectId
-  email String  @unique
+  username String  @unique
   password String
   name  String?
-  role String?
+  role Role @default(USER)
   level Int?
   tel  String?
   enable Boolean?
@@ -53,6 +68,9 @@ model User {
   orgId String?    @db.ObjectId
   personalDocument TheDocument[]
   files FileBeenUploaded[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 
@@ -67,6 +85,9 @@ model Org{
   children Org[] @relation("parent")
   users User[]
   orgDocument TheDocument[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model TheDocument{
@@ -79,6 +100,9 @@ model TheDocument{
   authorId String? @db.ObjectId
   org   Org?      @relation(fields: [orgId], references: [id])
   orgId String?    @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model FileBeenUploaded{
@@ -92,6 +116,7 @@ model FileBeenUploaded{
   path String //"uploads\\file-1665656561188f1.png",
   author User? @relation(fields: [authorId], references: [id])
   authorId String? @db.ObjectId
-  uploadTime DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 

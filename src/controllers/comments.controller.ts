@@ -26,7 +26,19 @@ export class CommentController {
   ) {
     let data = await prisma.post.findFirst({
       where: { id }
-    }).comments({ where: { active: all ? undefined : true } })
+    }).comments({
+      where: { active: all ? undefined : true },
+      include: {
+        author: {
+          select: {
+            name: true,
+            id: true,
+            role: true,
+            level: true
+          }
+        }
+      },
+    })
     return { data }
   }
 

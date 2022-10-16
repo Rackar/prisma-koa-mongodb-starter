@@ -84,7 +84,7 @@ export class PostController {
     @BodyParam('title') title: string,
     @BodyParam('body') body: string,
     @BodyParam('abstract') abstract: string,
-    @BodyParam('email') email: string,
+    @BodyParam('username') username: string,
     // @CurrentUser() user?: User,
   ) {
     if (!title) {
@@ -93,7 +93,7 @@ export class PostController {
     const count = await prisma.post.count()
     return {
       data: await prisma.post.create({
-        data: { title, body, abstract, sortIndex: count * 10, author: { connect: { email } } }
+        data: { title, body, abstract, sortIndex: count * 10, author: { connect: { username } } }
       })
     }
   }

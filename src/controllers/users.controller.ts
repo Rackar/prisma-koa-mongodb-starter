@@ -10,7 +10,8 @@ import {
   UseBefore,
   Ctx,
   Authorized,
-  NotFoundError
+  NotFoundError,
+  UnauthorizedError
 } from 'routing-controllers'
 import { UsersService } from '../services'
 import { Prisma } from '@prisma/client'
@@ -18,36 +19,89 @@ import { Service } from 'typedi'
 import prisma from '../helpers/client'
 import { createToken, verifyToken } from "../utils/auth"
 import { Context } from 'koa'
+import bcrypt from 'bcrypt'
+import config from "../utils/secret";
+import { throws } from 'assert'
 
 @JsonController()
 @Service()
 export class UsersController {
   constructor(private usersService: UsersService) { }
-  @Post('/login')
-  async login(
-    @BodyParam('username', { required: true }) email: string,
+  // router.post('/signup', async (ctx) => {
+  //   const { name, username, posts } = ctx.request.body
+
+  //   const postData = posts
+  //     ? posts.map((post: Prisma.PostCreateInput) => {
+  //       return { title: post.title, content: post.content || undefined }
+  //     })
+  //     : []
+  //   const newUser = await prisma.user.create({
+  //     data: {
+  //       name,
+  //       username,
+  //       posts: {
+  //         create: postData,
+  //       },
+  //     },
+  //   })
+
+  //   ctx.status = 201 // Created
+  //   ctx.body = newUser
+  // })
+
+  @Post('/signup')
+  async signup(
+    @BodyParam('username', { required: true }) username: string,
     @BodyParam('password', { required: true }) password: string,
-    @Ctx() ctx: Context
   ) {
+    let encryptedPassword = await bcrypt.hash(password, 10)
     // 验证密码并查询用户信息
-    const user = await prisma.user.findFirstOrThrow({ where: { email, password } })
+    const user = await prisma.user.create({
+      data: {
+        username,
+        password: encryptedPassword,
+      },
+    })
     // if (!user)
     //   throw new NotFoundError(`User was not found.`); // message is optional
 
-    let token = createToken({ id: user.id, username: user.email, role: user.role })
+    let token = createToken({ id: user.id, username: user.username, role: user.role })
+
+    return { token }
+  }
+
+  @Post('/login')
+  async login(
+    @BodyParam('username', { required: true }) username: string,
+    @BodyParam('password', { required: true }) password: string,
+    @Ctx() ctx: Context
+  ) {
+    // let encryptedPassword = await bcrypt.hash(password, config.bcryptSalt)
+    // 验证密码并查询用户信息
+    const user = await prisma.user.findFirstOrThrow({ where: { username } })
+    const matched = await bcrypt.compare(password, user.password)
+    if (!matched) {
+      throw new UnauthorizedError(`登陆失败`); // 参数选填
+    }
+
+    // if (!user)
+
+    //   throw new NotFoundError(`User was not found.`); // message is optional
+
+    let token = createToken({ id: user.id, username: user.username, role: user.role })
 
     return { token }
   }
 
   // @Authorized()
   @Get('/users')
-  async query(@QueryParam('email') email: string,) {
+  async query(@QueryParam('username') username: string,) {
     let data = await prisma.user.findMany({
       where: {
-        email: email || undefined,
+        username: username || undefined,
       },
       select: {
-        email: true, name: true, tel: true, role: true, orgId: true, id: true
+        username: true, name: true, tel: true, role: true, orgId: true, id: true
       }
     })
 
@@ -56,7 +110,7 @@ export class UsersController {
 
   @Post('/users')
   async create(
-    @BodyParam('email') email: string,
+    @BodyParam('username') username: string,
     @BodyParam('name') name: string,
     @BodyParam('tel') tel: string,
     @BodyParam('role') role: string,
@@ -68,7 +122,7 @@ export class UsersController {
       throw new BadRequestError('username is required')
     }
     return await prisma.user.create({
-      data: { email, name, tel, role, password, orgId }
+      data: { username, name, tel, role, password, orgId }
     })
   }
 

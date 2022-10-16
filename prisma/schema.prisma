@@ -11,19 +11,35 @@ generator client {
 }
 model Post {
   id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  // slug     String    @unique
   title    String
   body     String //全文
   abstract    String //摘要
-  comments Comment[]
-  author   User      @relation(fields: [authorId], references: [id])
-  authorId String    @db.ObjectId
-  publish Boolean @default(true)
-  active Boolean @default(true)
-  sortIndex Int  //排序序号
   ding Boolean @default(false) //是否置顶
   viewCount Int @default(0)
 
+  comments Comment[]
+  author   User      @relation(fields: [authorId], references: [id])
+  authorId String    @db.ObjectId
+  category Category   @relation(fields: [categoryId], references: [id])
+  categoryId String  @db.ObjectId
+
+  publish Boolean @default(true)
+  active Boolean @default(true)
+  sortIndex Int  //排序序号
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name  String
+  description String?
+
+  posts Post[]
+
+  sortIndex Int  //排序序号
+  publish Boolean @default(true)
+  active Boolean @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -32,14 +48,15 @@ model Post {
 // postId must have @db.ObjectId to match up with Post's id type
 model Comment {
   id      String @id @default(auto()) @map("_id") @db.ObjectId
+  comment String
+
   post    Post   @relation(fields: [postId], references: [id])
   postId  String @db.ObjectId
-  comment String
   author   User      @relation(fields: [authorId], references: [id])
   authorId String    @db.ObjectId
+  
   publish Boolean @default(true)
   active Boolean @default(true)
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -60,10 +77,11 @@ model User {
   password String
   name  String?
   avatar String?
-  role Role @default(USER)
   level Int?
   tel  String?
   enable Boolean?
+
+  role Role @default(USER)
   posts Post[]
   comment Comment[]
   org   Org?      @relation(fields: [orgId], references: [id])
@@ -82,6 +100,7 @@ model Org{
   description String
   type String
   level String
+
   parentId String? @db.ObjectId
   parent Org? @relation("parent",fields: [parentId], references: [id],onDelete:NoAction,onUpdate:NoAction)
   children Org[] @relation("parent")
@@ -116,8 +135,10 @@ model FileBeenUploaded{
   mimetype String //"image/png",
   filename String //"file-1665656561188f1.png",
   path String //"uploads\\file-1665656561188f1.png",
+
   author User? @relation(fields: [authorId], references: [id])
   authorId String? @db.ObjectId
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

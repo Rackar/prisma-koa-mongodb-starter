@@ -24,17 +24,16 @@ export class CommentController {
     @BodyParam('id') id: string,
     @BodyParam('all') all?: boolean,
   ) {
-    let data = await prisma.post.findFirst({
+    let data = await prisma.post.findUnique({
       where: { id }
     }).comments({
       where: { active: all ? undefined : true },
       include: {
         author: {
           select: {
-            name: true,
-            id: true,
-            role: true,
-            level: true
+            nickname: true,
+            username: true,
+            id: true
           }
         }
       },

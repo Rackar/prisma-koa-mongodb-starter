@@ -10,6 +10,7 @@ interface CurrentUser {
   id: string;
   username: string;
   role: string;
+  nickname: string
 }
 
 interface IdecodeUser extends CurrentUser {
@@ -22,7 +23,8 @@ export function createToken(user: CurrentUser): string {
     {
       username: user.username, //payload部分可解密获取，不能放敏感信息
       id: user.id,
-      role: user.role
+      role: user.role,
+      nickname: user.nickname
     },
     config.jwtsecret,
     {

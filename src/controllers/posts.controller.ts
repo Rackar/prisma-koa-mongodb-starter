@@ -11,6 +11,7 @@ import {
   CurrentUser,
   Delete,
   Param,
+  Authorized,
 } from 'routing-controllers'
 import { Post as IPost, Prisma, User } from '@prisma/client'
 import { Service } from 'typedi'
@@ -30,10 +31,9 @@ export class PostController {
         comments: true,
         author: {
           select: {
-            name: true,
-            id: true,
-            role: true,
-            level: true
+            nickname: true,
+            username: true,
+            id: true
           }
         }
       },
@@ -68,10 +68,9 @@ export class PostController {
         comments: true,
         author: {
           select: {
-            name: true,
-            id: true,
-            role: true,
-            level: true
+            nickname: true,
+            username: true,
+            id: true
           }
         }
       },
@@ -79,6 +78,7 @@ export class PostController {
     return { data }
   }
 
+  @Authorized()
   @Post('/post')
   async create(
     @BodyParam('title') title: string,
@@ -98,6 +98,7 @@ export class PostController {
     }
   }
 
+  @Authorized()
   @Put('/post/sortindex')
   async changeSortIndex(
     @BodyParam('id') id: string,

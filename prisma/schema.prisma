@@ -56,8 +56,10 @@ enum Role {
 model User {
   id    String  @id @default(auto()) @map("_id") @db.ObjectId
   username String  @unique
+  nickname String 
   password String
   name  String?
+  avatar String?
   role Role @default(USER)
   level Int?
   tel  String?

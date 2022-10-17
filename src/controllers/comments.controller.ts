@@ -44,7 +44,7 @@ export class CommentController {
   @Post('/comment')
   async create(
     @BodyParam('postId') postId: string,
-    @BodyParam('authorId') authorId: string,
+    @BodyParam('username') username: string,
     @BodyParam('comment') comment: string,
   ) {
 
@@ -52,9 +52,19 @@ export class CommentController {
 
     return {
       data: await prisma.comment.create({
-        data: { postId, comment, authorId }
+        data: {
+          comment,
+          post: {
+            connect: {
+              id: postId
+            }
+          },
+          author: { connect: { username } }
+        }
       })
     }
+
+
   }
 
 

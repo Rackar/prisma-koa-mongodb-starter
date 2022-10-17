@@ -1,7 +1,7 @@
 import prisma from './client'
-import { UsersController } from '../controllers/users.controller'
+import { UsersController, PostController, CommentController } from '../controllers/index'
 
-async function dropAllTable() {
+async function dropAndInitDB() {
   await prisma.comment.deleteMany({})
   await prisma.post.deleteMany({})
   await prisma.category.deleteMany({})
@@ -10,8 +10,16 @@ async function dropAllTable() {
   await prisma.org.deleteMany({})
   await prisma.user.deleteMany({})
 
+  //创建初始化数据
   let user = new UsersController(null)
-  user.signup("admin", "管理员", "abcdefg")
+  let uIns = await user.signup("admin", "管理员", "123456")
+
+  let post = new PostController()
+  let pIns = await post.create('测试1', "初始测试内容1111", "初始测试内容1111", 'admin')
+
+  let comment = new CommentController()
+  let cIns = await comment.create(pIns.data.id, 'admin', "评论1")
+
 }
 
-dropAllTable()
+dropAndInitDB()

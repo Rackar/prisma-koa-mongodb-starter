@@ -85,17 +85,25 @@ export class UsersController {
 
   @Authorized()
   @Get('/users')
-  async query(@QueryParam('username') username: string,) {
-    let data = await prisma.user.findMany({
-      where: {
-        username: username || undefined,
-      },
-      select: {
-        username: true, name: true, tel: true, role: true, orgId: true, id: true
-      }
-    })
+  async query(
+    @QueryParam('username') username?: string,
+    @QueryParam('skip') skip?: number,
+    @QueryParam('take') take?: number,
+  ) {
+    const where = {
+      username: username || undefined,
+    }
+    const [list, total] = await prisma.$transaction([
+      prisma.user.findMany({
+        where, skip, take, select: {
+          nickname: true, username: true, name: true, tel: true, role: true, orgId: true, id: true
+        }
+      }),
+      prisma.user.count({ where })
+    ])
 
-    return { data }
+
+    return { data: { list, total } }
   }
 
   @Authorized()
